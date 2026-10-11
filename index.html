@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a0d12">
+<title>The Symbolic Civilization — Compression, Decompression & Possible Worlds</title>
+<style>
+:root{
+ --bg:#080b10;--panel:#101720;--panel2:#151e29;--ink:#eef3f6;--muted:#a5b1bd;
+ --line:rgba(223,236,245,.14);--accent:#8de1d0;--accent2:#f4b86b;--pink:#e69ab2;
+ --blue:#8ab8ff;--max:1180px;--radius:20px;--shadow:0 22px 80px rgba(0,0,0,.28)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.005em}
+body:before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse at 12% 0%,rgba(66,115,135,.16),transparent 42%),radial-gradient(ellipse at 90% 18%,rgba(120,72,103,.13),transparent 38%),linear-gradient(180deg,#080b10,#0a1017 48%,#080b10)}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{width:min(var(--max),calc(100% - 42px));margin:auto}
+.eyebrow{font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:750}
+header{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:rgba(8,11,16,.82);backdrop-filter:blur(18px)}
+.nav{height:70px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.01em}
+.brand-mark{width:32px;height:32px;border:1px solid var(--accent);border-radius:50%;display:grid;place-items:center;color:var(--accent);font-size:.9rem}
+.navlinks{display:flex;align-items:center;gap:19px;font-size:.82rem;color:var(--muted)}
+.navlinks a{color:var(--muted)}
+.navlinks a:hover{color:var(--ink)}
+.navbtn{display:none;background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
+.hero{min-height:calc(94vh - 70px);display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:44px;padding-top:70px;padding-bottom:80px}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(3.2rem,7.6vw,7.2rem);line-height:.91;letter-spacing:-.075em;font-weight:820;margin:18px 0 28px;max-width:760px}
+h1 span{color:var(--accent)}
+.lead{font-size:clamp(1.08rem,1.8vw,1.35rem);line-height:1.65;color:#c4d0d9;max-width:680px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin:30px 0 24px}
+.btn{border:1px solid var(--line);border-radius:999px;padding:12px 18px;color:var(--ink);background:transparent;display:inline-flex;align-items:center;gap:9px;transition:.2s}
+.btn.primary{background:var(--accent);color:#07110f;border-color:var(--accent);font-weight:800}
+.btn:hover{transform:translateY(-2px);text-decoration:none;border-color:var(--accent)}
+.micro{font-size:.84rem;color:var(--muted)}
+.hero-art{position:relative;min-height:480px;border:1px solid var(--line);border-radius:28px;overflow:hidden;background:linear-gradient(145deg,rgba(141,225,208,.08),rgba(138,184,255,.03) 50%,rgba(230,154,178,.07));box-shadow:var(--shadow)}
+.hero-art:before,.hero-art:after{content:"";position:absolute;border:1px solid rgba(141,225,208,.25);border-radius:50%;inset:11%;animation:orbit 28s linear infinite}
+.hero-art:after{inset:22%;border-color:rgba(244,184,107,.25);animation-direction:reverse;animation-duration:19s}
+@keyframes orbit{to{transform:rotate(360deg)}}
+.core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:145px;height:145px;border-radius:50%;display:grid;place-items:center;text-align:center;background:radial-gradient(circle at 35% 30%,#d9fff4,#6dc9b7 36%,#173d42 72%);color:#081412;box-shadow:0 0 90px rgba(141,225,208,.18);font-weight:900;letter-spacing:.04em}
+.orbit-label{position:absolute;border:1px solid var(--line);background:rgba(9,14,20,.86);backdrop-filter:blur(10px);padding:10px 13px;border-radius:12px;font-size:.8rem;color:#d7e0e6}
+.ol1{top:12%;left:10%}.ol2{top:17%;right:8%}.ol3{bottom:19%;left:7%}.ol4{bottom:11%;right:9%}.ol5{top:48%;right:2%}
+.art-caption{position:absolute;left:22px;bottom:20px;color:var(--muted);font-size:.77rem;max-width:240px}
+.section{padding:100px 0;border-top:1px solid var(--line)}
+.section-head{display:grid;grid-template-columns:.7fr 1.3fr;gap:35px;margin-bottom:42px;align-items:start}
+.kicker{font-size:.8rem;color:var(--accent2);text-transform:uppercase;letter-spacing:.16em;font-weight:800}
+h2{font-size:clamp(2.2rem,4.6vw,4.3rem);line-height:1.02;letter-spacing:-.055em;margin:10px 0 18px}
+h3{font-size:1.22rem;line-height:1.3;letter-spacing:-.02em;margin-bottom:10px}
+.section-intro{font-size:1.08rem;color:#c0ccd5;max-width:760px}
+.muted{color:var(--muted)}
+.grid{display:grid;gap:16px}
+.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{border:1px solid var(--line);background:linear-gradient(145deg,rgba(21,30,41,.88),rgba(12,17,24,.92));border-radius:var(--radius);padding:24px;position:relative;overflow:hidden}
+.card p:last-child{margin-bottom:0}
+.card .num{font-size:.78rem;color:var(--accent);letter-spacing:.12em;font-weight:800}
+.card .symbol{font-size:1.7rem;margin-bottom:16px;display:block}
+.card p{color:#b6c2cc}
+.pullquote{font-size:clamp(1.55rem,3vw,2.5rem);line-height:1.3;letter-spacing:-.035em;border-left:3px solid var(--accent);padding:8px 0 8px 25px;max-width:900px;margin:42px auto;color:#eaf5f3}
+.flow{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap}
+.flow .step{flex:1 1 125px;min-width:0;padding:17px 14px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);text-align:center}
+.flow .step b{display:block;font-size:.95rem}
+.flow .step small{display:block;color:var(--muted);font-size:.77rem;margin-top:6px}
+.flow .arrow{align-self:center;color:var(--accent);font-size:1.3rem}
+.timeline{position:relative;display:grid;gap:0}
+.timeline:before{content:"";position:absolute;left:23px;top:18px;bottom:18px;width:1px;background:linear-gradient(var(--accent),var(--blue),var(--pink));opacity:.7}
+.era{display:grid;grid-template-columns:48px 1fr;gap:18px;padding:18px 0;position:relative}
+.era-dot{width:47px;height:47px;border-radius:50%;border:1px solid var(--accent);background:var(--bg);display:grid;place-items:center;color:var(--accent);font-size:.8rem;font-weight:800;z-index:1}
+.era-body{display:grid;grid-template-columns:1fr 2fr;gap:22px;padding:20px 23px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.025)}
+.era-body p{color:#b7c4ce;margin-bottom:0}
+.tag{display:inline-flex;border:1px solid var(--line);border-radius:99px;padding:4px 9px;color:var(--muted);font-size:.72rem;margin:3px 3px 0 0}
+.compare{width:100%;border-collapse:collapse}
+.compare th,.compare td{text-align:left;padding:15px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+.compare th{color:var(--accent);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}
+.compare td{color:#c1cbd3}
+.compare td:first-child{color:var(--ink);font-weight:700}
+.lab{display:grid;grid-template-columns:.8fr 1.2fr;gap:18px}
+.lab-controls{display:grid;gap:15px}
+label{display:block;font-size:.85rem;color:#c5d0d8;margin-bottom:6px}
+select,input[type="text"],textarea{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:12px;background:#0b1118;color:var(--ink)}
+textarea{min-height:100px;resize:vertical}
+.output{min-height:300px;background:radial-gradient(ellipse at top right,rgba(141,225,208,.09),transparent 55%),#0d131b}
+.output h3{color:var(--accent)}
+.output ol{padding-left:21px;color:#c1ccd5}
+.output li{margin:8px 0}
+.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.pill{border:1px solid var(--line);border-radius:999px;padding:7px 12px;color:var(--muted);background:transparent;font-size:.8rem}
+.pill.active{background:var(--accent);border-color:var(--accent);color:#08120f;font-weight:800}
+.result-note{font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;margin-top:20px}
+.scale{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}
+.scale button{border:1px solid var(--line);background:rgba(255,255,255,.025);color:var(--ink);padding:16px 12px;border-radius:12px;text-align:left}
+.scale button.active{border-color:var(--accent);background:rgba(141,225,208,.09)}
+.scale b{display:block;margin-bottom:6px}
+.scale span{font-size:.78rem;color:var(--muted)}
+.insight{border:1px solid rgba(244,184,107,.35);background:rgba(244,184,107,.055);border-radius:16px;padding:20px 22px}
+.insight strong{color:var(--accent2)}
+.dark-light{display:flex;align-items:center;gap:10px}
+.switch{background:transparent;border:1px solid var(--line);border-radius:99px;padding:7px 10px;color:var(--muted)}
+body.light{--bg:#edf2f2;--panel:#fff;--panel2:#e2eaea;--ink:#101a20;--muted:#53616b;--line:rgba(20,40,48,.16);--accent:#087c6c;--accent2:#96591b;--pink:#a84469;--blue:#315eaa;box-shadow:none}
+body.light:before{background:radial-gradient(ellipse at 12% 0%,rgba(66,115,135,.12),transparent 42%),linear-gradient(180deg,#edf2f2,#e4ebec 48%,#edf2f2)}
+body.light header{background:rgba(237,242,242,.85)}
+body.light .card,body.light .era-body{background:rgba(255,255,255,.7)}
+body.light .hero-art{background:linear-gradient(145deg,rgba(8,124,108,.08),rgba(49,94,170,.03),rgba(168,68,105,.06))}
+body.light .core{background:radial-gradient(circle at 35% 30%,#d9fff4,#6dc9b7 36%,#173d42);color:#081412}
+body.light .orbit-label{background:rgba(255,255,255,.88);color:#18262d}
+body.light .pullquote{color:#152329}
+body.light .lead,body.light .section-intro,body.light .card p,body.light .era-body p,body.light .compare td,body.light .output ol{color:#43525c}
+body.light select,body.light input[type="text"],body.light textarea{background:#fff;color:#152329}
+body.light .output{background:radial-gradient(ellipse at top right,rgba(8,124,108,.08),transparent 55%),#fff}
+footer{padding:45px 0 55px;border-top:1px solid var(--line)}
+.footer-grid{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.small{font-size:.78rem;color:var(--muted)}
+.backtop{position:fixed;right:20px;bottom:20px;z-index:10;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(12,18,25,.9);color:var(--accent);display:grid;place-items:center;opacity:0;pointer-events:none;transition:.2s}
+.backtop.show{opacity:1;pointer-events:auto}
+.progress{position:fixed;top:69px;left:0;height:2px;background:var(--accent);width:0;z-index:25}
+@media(max-width:850px){
+ .hero{grid-template-columns:1fr;min-height:auto;padding-top:65px}.hero-art{min-height:400px}
+ .section-head{grid-template-columns:1fr;gap:8px}.grid.three,.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .lab{grid-template-columns:1fr}.era-body{grid-template-columns:1fr;gap:7px}
+ .navlinks{display:none;position:absolute;top:70px;left:0;right:0;padding:18px 22px;background:var(--bg);border-bottom:1px solid var(--line);flex-direction:column;align-items:flex-start}
+ .navlinks.open{display:flex}.navbtn{display:block}
+}
+@media(max-width:560px){
+ .wrap{width:min(100% - 28px,var(--max))}.section{padding:70px 0}
+ .grid.two,.grid.three,.grid.four{grid-template-columns:1fr}
+ .hero-art{min-height:360px}.core{width:115px;height:115px;font-size:.9rem}
+ .orbit-label{font-size:.69rem;padding:8px 9px}.ol5{right:0}
+ .scale{grid-template-columns:repeat(2,1fr)}
+ .compare{font-size:.82rem}.compare th,.compare td{padding:10px 8px}
+ h1{font-size:clamp(3.1rem,17vw,5rem)}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<header>
+ <div class="wrap nav">
+  <a class="brand" href="#top" aria-label="The Symbolic Civilization home"><span class="brand-mark">S/∞</span><span>THE SYMBOLIC CIVILIZATION</span></a>
+  <nav class="navlinks" id="navlinks" aria-label="Main navigation">
+   <a href="#thesis">Thesis</a><a href="#history">History</a><a href="#mechanism">Mechanism</a><a href="#possibilities">Possibilities</a><a href="#politics">Power</a><a href="#research">Research</a>
+  </nav>
+  <div class="dark-light"><button class="switch" id="themeToggle" aria-label="Toggle light and dark theme">◐ Theme</button><button class="navbtn" id="menuToggle" aria-label="Toggle navigation">☰</button></div>
+ </div>
+</header>
+<main id="top">
+<section class="wrap hero">
+ <div>
+  <div class="eyebrow">A research framework for the AI age</div>
+  <h1>THE<br><span>SYMBOLIC</span><br>CIVILIZATION</h1>
+  <p class="lead">Humanity turns experience into symbols, symbols into systems, and systems into worlds. AI adds a new capacity: to recombine our inherited symbolic reality into possibilities we can examine—but must still test.</p>
+  <div class="hero-actions"><a class="btn primary" href="#thesis">Explore the theory <span>↘</span></a><button class="btn" id="startLab">Open the possibility lab <span>✳</span></button></div>
+  <p class="micro">Compression · Decompression · Fixation · Revision</p>
+ </div>
+ <div class="hero-art" aria-label="Abstract illustration of reality transformed into symbols and possibilities">
+  <div class="core">LIVED<br>REALITY</div>
+  <div class="orbit-label ol1">Memory / Archive</div><div class="orbit-label ol2">Symbols / Models</div>
+  <div class="orbit-label ol3">Human experience</div><div class="orbit-label ol4">AI / Possibility space</div><div class="orbit-label ol5">Institutions</div>
+  <div class="art-caption">A recursive civilization: representations shape action, action changes the world, and the world supplies new evidence.</div>
+ </div>
+</section>
+
+<section class="section" id="thesis">
+ <div class="wrap">
+  <div class="section-head"><div><div class="kicker">01 / The central thesis</div><h2>Reality becomes<br>shareable.</h2></div><div><p class="section-intro">Civilization is not merely a pile of inventions. It is an evolving infrastructure for preserving, transmitting, interpreting, and acting on representations of the world.</p><p class="muted">A cave painting preserves a trace of experience. Language carries memory. Mathematics expresses relationships. Law encodes rules. Archives preserve evidence. AI transforms symbolic material into new candidates for interpretation and action.</p></div></div>
+  <div class="flow" aria-label="The symbolic civilization cycle">
+   <div class="step"><b>Experience</b><small>What happens</small></div><span class="arrow">→</span>
+   <div class="step"><b>Selection</b><small>What is noticed</small></div><span class="arrow">→</span>
+   <div class="step"><b>Symbol</b><small>What is represented</small></div><span class="arrow">→</span>
+   <div class="step"><b>Transmission</b><small>What survives</small></div><span class="arrow">→</span>
+   <div class="step"><b>Interpretation</b><small>What it may mean</small></div><span class="arrow">→</span>
+   <div class="step"><b>Action</b><small>What changes</small></div>
+  </div>
+  <blockquote class="pullquote">Every symbolic representation preserves something, transforms something, and leaves something out.</blockquote>
+  <div class="grid three">
+   <article class="card"><span class="symbol">◉</span><div class="num">A / REALITY</div><h3>The world exceeds the model</h3><p>Physical processes and lived experiences do not become identical to the descriptions we make of them. Models can be useful and still incomplete.</p></article>
+   <article class="card"><span class="symbol">⌘</span><div class="num">B / SYMBOL</div><h3>Representations make scale possible</h3><p>Symbols allow knowledge to travel beyond the moment and the individual, but meaning changes with context, access, and interpretation.</p></article>
+   <article class="card"><span class="symbol">↻</span><div class="num">C / FEEDBACK</div><h3>Representations shape reality</h3><p>People act on models, rules, identities, and predictions. The consequences become new experiences that can confirm or challenge the model.</p></article>
+  </div>
+ </div>
+</section>
+
+<section class="section" id="definitions">
+ <div class="wrap">
+  <div class="section-head"><div><div class="kicker">02 / Three realities</div><h2>Not all realities<br>are the same kind.</h2></div><div><p class="section-intro">A rigorous theory distinguishes the world being described, the symbols used to describe it, and the social arrangements that become real through shared recognition and enforcement.</p></div></div>
+  <div class="grid three">
+   <article class="card"><div class="num">01</div><h3>Physical & lived reality</h3><p>Material processes, ecological systems, bodies, events, and experience. Human knowledge of this reality is mediated and fallible; reality is not simply whatever we believe.</p><span class="tag">Nature</span><span class="tag">Bodies</span><span class="tag">Events</span></article>
+   <article class="card"><div class="num">02</div><h3>Symbolic reality</h3><p>Images, language, mathematics, maps, stories, scientific models, historical narratives, databases, and algorithms through which the world is represented.</p><span class="tag">Representation</span><span class="tag">Meaning</span><span class="tag">Knowledge</span></article>
+   <article class="card"><div class="num">03</div><h3>Institutionally constructed reality</h3><p>Money, citizenship, property, borders, corporations, and legal identities. They depend on human institutions yet can have tangible consequences for freedom and survival.</p><span class="tag">Rules</span><span class="tag">Power</span><span class="tag">Coordination</span></article>
+  </div>
+  <div class="insight" style="margin-top:18px"><strong>Critical distinction:</strong> A social reality can be constructed without being imaginary or powerless. But its historical existence does not prove that it is natural, inevitable, or morally justified.</div>
+ </div>
+</section>
+
+<section class="section" id="history">
+ <div class="wrap">
+  <div class="section-head"><div><div class="kicker">03 / Historical arc</div><h2>From visible trace<br>to generative systems.</h2></div><div><p class="section-intro">A broad historical model of how humans externalize and extend knowledge. These epochs overlap; each new medium depends on earlier capacities rather than simply replacing them.</p></div></div>
+  <div class="timeline">
+   <article class="era"><div class="era-dot">01</div><div class="era-body"><div><h3>The visible trace</h3><span class="tag">Cave art</span><span class="tag">Marks</span></div><p>Images and material traces preserve aspects of experience beyond the moment. Their original meanings can remain uncertain. <b>Shift:</b> experience becomes representable.</p></div></article>
+   <article class="era"><div class="era-dot">02</div><div class="era-body"><div><h3>Language & shared memory</h3><span class="tag">Oral tradition</span><span class="tag">Story</span></div><p>Language and social learning transmit skills, warnings, identities, and collective memories. <b>Shift:</b> experience becomes socially transmissible.</p></div></article>
+   <article class="era"><div class="era-dot">03</div><div class="era-body"><div><h3>Writing & external memory</h3><span class="tag">Records</span><span class="tag">Archives</span></div><p>Writing supports records, administration, law, literature, and communication across generations. Literacy and access remain unequal. <b>Shift:</b> memory becomes durable outside the individual.</p></div></article>
+   <article class="era"><div class="era-dot">04</div><div class="era-body"><div><h3>Reproducible knowledge</h3><span class="tag">Printing</span><span class="tag">Public debate</span></div><p>Printing expands the scale and consistency of textual reproduction, helping ideas circulate across wider networks. <b>Shift:</b> knowledge becomes reproducible at scale.</p></div></article>
+   <article class="era"><div class="era-dot">05</div><div class="era-body"><div><h3>Knowledge becomes material power</h3><span class="tag">Science</span><span class="tag">Industry</span></div><p>Measurements, models, technical drawings, and standardized procedures shape machinery and infrastructure. <b>Shift:</b> representations become material interventions.</p></div></article>
+   <article class="era"><div class="era-dot">06</div><div class="era-body"><div><h3>Networked symbolic reality</h3><span class="tag">Computing</span><span class="tag">Internet</span></div><p>Texts, images, transactions, and measurements become digitally searchable, copyable, and computable. <b>Shift:</b> symbolic information becomes networked.</p></div></article>
+   <article class="era"><div class="era-dot">07</div><div class="era-body"><div><h3>Generative transformation</h3><span class="tag">AI</span><span class="tag">Synthesis</span></div><p>AI systems learn patterns in data and generate, transform, classify, or compare representations. They can help explore possibilities, but cannot guarantee their truth. <b>Shift:</b> symbols become a computational possibility space.</p></div></article>
+  </div>
+ </div>
+</section>
+
+<section class="section" id="mechanism">
+ <div class="wrap">
+  <div class="section-head"><div><div class="kicker">04 / The mechanism</div><h2>Compression.<br>Decompression.<br>Fixation.</h2></div><div><p class="section-intro">The theory's central mechanism is a recursive cycle. Each stage enables the next, but each stage can also introduce loss, distortion, or power imbalance.</p></div></div>
+  <div class="grid three">
+   <article class="card"><div class="num">OPERATION 01</div><h3>Compression</h3><p>Complex experience is selected, abstracted, encoded, and transmitted as symbols. This makes information manageable and cumulative.</p><p><b>Risk:</b> omission, distortion, loss of context, and the exclusion of undocumented experience.</p></article>
+   <article class="card"><div class="num">OPERATION 02</div><h3>Decompression</h3><p>Representations are reinterpreted, compared, recombined, and expanded into hypotheses, explanations, designs, and scenarios.</p><p><b>Risk:</b> plausible invention, false connections, and many variations on one inherited assumption.</p></article>
+   <article class="card"><div class="num">OPERATION 03</div><h3>Fixation</h3><p>Selected interpretations become standards, policies, practices, narratives, technologies, or accepted knowledge.</p><p><b>Risk:</b> institutional inertia, dogma, coercion, and immunity to correction.</p></article>
+  </div>
+  <h3 style="margin-top:36px">A conceptual formalization</h3>
+  <div class="card">
+   <div class="flow">
+    <div class="step"><b>R</b><small>World / domain</small></div><span class="arrow">→</span>
+    <div class="step"><b>O</b><small>Observation</small></div><span class="arrow">→</span>
+    <div class="step"><b>S</b><small>Symbolic record</small></div><span class="arrow">→</span>
+    <div class="step"><b>D(S)</b><small>Candidate meanings</small></div><span class="arrow">→</span>
+    <div class="step"><b>V</b><small>Evaluation</small></div><span class="arrow">→</span>
+    <div class="step"><b>A</b><small>Action</small></div>
+   </div>
+   <p class="muted" style="margin-top:20px">R = reality or investigated domain; O = observation and selection; S = symbolic representation; D = decompression procedure; V = validation; A = action. This is a conceptual model, not a universal mathematical law. Action creates consequences and new observations, restarting the cycle.</p>
+  </div>
+  <div class="insight" style="margin-top:18px"><strong>Non-negotiable distinction:</strong> AI can expand the hypothesis space. It cannot make every generated hypothesis true.</div>
+ </div>
+</section>
+
+<section class="section" id="human">
+ <div class="wrap">
+  <div class="section-head"><div><div class="kicker">05 / Human cognition</div><h2>Past, present,<br>possible future.</h2></div><div><p class="section-intro">Memory, perception, dreams, imagination, and prediction connect humans to different dimensions of experience. Civilization grows when these capacities are externalized, shared, criticized, and accumulated.</p></div></div>
+  <div class="grid four">
+   <article class="card"><span class="symbol">◷</span><h3>Memory</h3><p>Reconstructs the past and supports continuity. Human memory is fallible; archives preserve evidence but reflect decisions about what to collect and retain.</p></article>
+   <article class="card"><span class="symbol">◌</span><h3>Perception</h3><p>Provides situated contact with the present. Attention, instruments, prior expectations, and context shape what becomes observable.</p></article>
+   <article class="card"><span class="symbol">✳</span><h3>Imagination</h3><p>Creates alternatives: a bridge before it is built, a political system before it exists, or a cinematic world that never existed physically.</p></article>
+   <article class="card"><span class="symbol">↗</span><h3>Prediction</h3><p>Anticipates consequences using patterns and models. Forecasts are uncertain and may fail when conditions or human behavior change.</p></article>
+  </div>
+  <blockquote class="pullquote">Memory reconstructs the past. Perception informs the present. Imagination explores alternatives. Prediction anticipates consequences. Action tests what those representations are worth.</blockquote>
+ </div>
+</section>
+
+<section class="section" id="possibilities">
+ <div class="wrap">
+  <div class="section-head"><div><div class="kicker">06 / Interactive exploration</div><h2>The possibility<br>laboratory.</h2></div><div><p class="section-intro">Choose a domain and explore how a single compressed statement can open multiple lines of inquiry. This local demonstration uses illustrative prompts, not a live AI model; it generates examples in your browser without sending data anywhere.</p></div></div>
+  <div class="lab">
+   <div class="card lab-controls">
+    <div><label for="domain">Choose a domain</label><select id="domain"><option value="history">Historical event</option><option value="environment">Environmental change</option><option value="politics">Political institution</option><option value="technology">AI technology</option><option value="film">Documentary film</option></select></div>
+    <div><label for="claim">Enter a compressed claim or observation</label><textarea id="claim" placeholder="Example: River erosion changes more than geography; it can change ownership, memory and opportunity.">River erosion changes more than geography; it can change ownership, memory and opportunity.</textarea></div>
+    <button class="btn primary" id="decompress">Decompress this statement ↗</button>
+    <p class="small">Tip: use a claim that could be investigated, not only a conclusion you already believe.</p>
+   </div>
+   <div class="card output" id="labOutput" aria-live="polite">
+    <div class="num">POSSIBILITY OUTPUT</div><h3>One statement. Multiple inquiries.</h3>
+    <p class="muted">Your claim can be examined through different lenses. Select “Decompress” to generate a structured set of questions and candidate interpretations.</p>
+   </div>
+  </div>
+  <h3 style="margin-top:38px">From conceivable to realized</h3>
+  <p class="muted">A generated possibility must pass through different levels before it can be treated as a workable intervention.</p>
+  <div class="scale" id="possibilityScale">
+   <button class="active" data-level="0"><b>01 / Conceivable</b><span>Can it be expressed?</span></button>
+   <button data-level="1"><b>02 / Coherent</b><span>Does it make sense?</span></button>
+   <button data-level="2"><b>03 / Feasible</b><span>Could it work here?</span></button>
+   <button data-level="3"><b>04 / Tested</b><span>What happened in practice?</span></button>
+  </div>
+  <div class="card" id="levelDetail" style="margin-top:10px"><h3>Conceivable</h3><p class="muted">A possibility can be expressed in language, images, or a conceptual model. Conceivability alone does not establish consistency, feasibility, or truth.</p></div>
+ </div>
+</section>
+
+<section class="section" id="fixation">
+ <div class="wrap">
+  <div class="section-head"><div><div class="kicker">07 / The paradox</div><h2>Why worlds<br>become fixed.</h2></div><div><p class="section-intro">Civilization needs stability to coordinate action. But stability becomes dangerous when a model, narrative, or institution can no longer be challenged by evidence or legitimate dissent.</p></div></div>
+  <div class="grid two">
+   <article class="card"><div class="num">DYNAMIC SYSTEM</div><h3>Open symbolic world</h3><p>Evidence can revise claims. Different interpretations can be examined. Uncertainty is visible. Archives preserve contradictions. Institutions maintain correction procedures.</p><span class="tag">Learning</span><span class="tag">Plurality</span><span class="tag">Revision</span></article>
+   <article class="card"><div class="num">CLOSED SYSTEM</div><h3>Fixed symbolic world</h3><p>One narrative dominates. Authority determines acceptable truth. Contrary evidence is dismissed or suppressed. Institutional survival becomes more important than correction.</p><span class="tag">Dogma</span><span class="tag">Conformity</span><span class="tag">Control</span></article>
+  </div>
+  <h3 style="margin-top:35px">Stability, truth, legitimacy, and power are not the same</h3>
+  <div style="overflow-x:auto"><table class="compare"><thead><tr><th>Dimension</th><th>Question</th><th>What it does not prove</th></tr></thead><tbody>
+   <tr><td>Stability</td><td>Does the system persist and coordinate behavior?</td><td>That it is true or just.</td></tr>
+   <tr><td>Truth</td><td>Is the claim supported by the relevant evidence and reasoning?</td><td>That it will be accepted or enforced.</td></tr>
+   <tr><td>Legitimacy</td><td>Can authority or a decision be justified under appropriate ethical and public standards?</td><td>That every factual claim it makes is correct.</td></tr>
+   <tr><td>Power</td><td>Can an actor influence decisions, resources, or accepted narratives?</td><td>That the actor's account is accurate or morally justified.</td></tr>
+  </tbody></table></div>
+ </div>
+</section>
+
+<section class="section" id="heaven">
+ <div class="wrap">
+  <div class="section-head"><div><div class="kicker">08 / Philosophical metaphor</div><h2>The dream of a<br>completed world.</h2></div><div><p class="section-intro">“Heaven” is used here as a metaphor for the imagined endpoint at which uncertainty disappears and a symbolic order becomes complete—not as a claim about the meaning of every religious tradition.</p></div></div>
+  <div class="grid two">
+   <article class="card"><h3>The promise of finality</h3><p>Humans imagine a condition in which injustice ends, suffering is overcome, prosperity becomes permanent, or every question has a final answer. These aspirations differ in content, but they can share a desire to overcome uncertainty and incompleteness.</p></article>
+   <article class="card"><h3>The risk of symbolic closure</h3><p>A model built to explain the world can become a system that decides what may count as an explanation. When contrary evidence is treated as illegitimate by definition, the model becomes resistant to learning.</p></article>
+  </div>
+  <blockquote class="pullquote">The technological danger is not simply that AI may give wrong answers. It is that people may institutionalize its answers as unquestionable.</blockquote>
+  <p class="section-intro">The alternative is not permanent disorder. It is an open-ended civilization: stable enough to act, transparent enough to inspect, and revisable enough to learn.</p>
+ </div>
+</section>
+
+<section class="section" id="politics">
+ <div class="wrap">
+  <div class="section-head"><div><div class="kicker">09 / Power & political economy</div><h2>Who controls the<br>possibility engine?</h2></div><div><p class="section-intro">Symbolic systems are shaped by ownership, access, language, institutions, and incentives. AI may democratize the production of content while concentrating the infrastructure that ranks, distributes, and monetizes it.</p></div></div>
+  <div class="grid three">
+   <article class="card"><h3>Preservation power</h3><p>Who can record experience, preserve archives, digitize material, and determine what survives? Documentary visibility can be mistaken for historical importance.</p></article>
+   <article class="card"><h3>Interpretive power</h3><p>Who has the resources to analyze data, publish findings, establish standards, and challenge authoritative accounts? Some communities remain underrepresented in digital records.</p></article>
+   <article class="card"><h3>Distribution power</h3><p>Who owns models, compute, platforms, and ranking systems? Wider access to generation does not automatically create shared governance or accountability.</p></article>
+  </div>
+  <div class="insight" style="margin-top:18px"><strong>Two kinds of democratization:</strong> Generative democratization lets more people create symbolic material. Institutional democratization lets more people influence how that material is stored, evaluated, distributed, and used. The first does not automatically produce the second.</div>
+  <h3 style="margin-top:34px">Seven principles for an open symbolic civilization</h3>
+  <div class="grid two">
+   <div class="card"><h3>01 — Traceability</h3><p>Connect important claims to inspectable sources and distinguish evidence from generated interpretation.</p></div>
+   <div class="card"><h3>02 — Plurality</h3><p>Allow different perspectives to be examined without treating every claim as equally supported.</p></div>
+   <div class="card"><h3>03 — Contestability</h3><p>Enable people to challenge consequential decisions and request correction.</p></div>
+   <div class="card"><h3>04 — Revisability</h3><p>Maintain procedures for updating models, archives, classifications, and policies.</p></div>
+   <div class="card"><h3>05 — Distributed access</h3><p>Reduce unnecessary exclusion by wealth, language, geography, or institutional gatekeeping.</p></div>
+   <div class="card"><h3>06 — Accountability</h3><p>Keep people and organizations answerable for systems they deploy and decisions they make.</p></div>
+   <div class="card"><h3>07 — Real-world consequences</h3><p>Evaluate effects on people, communities, and ecosystems—not only computational objectives.</p></div>
+  </div>
+ </div>
+</section>
+
+<section class="section" id="delta">
+ <div class="wrap">
+  <div class="section-head"><div><div class="kicker">10 / A living-delta application</div><h2>When physical<br>change meets<br>symbolic power.</h2></div><div><p class="section-intro">Bangladesh's delta offers a compelling case for connecting ecological processes, lived experience, archives, institutions, and competing historical narratives—without confusing one kind of evidence with another.</p></div></div>
+  <div class="grid four">
+   <article class="card"><div class="num">LAYER 01</div><h3>Physical delta</h3><p>Rivers, sediment, flooding, erosion, monsoon patterns, and ecological change.</p></article>
+   <article class="card"><div class="num">LAYER 02</div><h3>Lived delta</h3><p>Livelihoods, family memory, displacement, adaptation, and community relationships.</p></article>
+   <article class="card"><div class="num">LAYER 03</div><h3>Documented delta</h3><p>Land records, maps, oral histories, census data, legal claims, and research archives.</p></article>
+   <article class="card"><div class="num">LAYER 04</div><h3>Institutional delta</h3><p>Government, markets, infrastructure, political representation, and development policy.</p></article>
+  </div>
+  <p class="section-intro" style="margin-top:25px">An AI-assisted archive could connect satellite imagery, historical maps, oral histories, land records, economic data, and policy documents. Each source contributes a different kind of evidence. The system should show provenance, corroboration, contradiction, uncertainty, and unresolved questions rather than manufacturing a single seamless story.</p>
+  <blockquote class="pullquote">A living archive does not replace one unquestionable narrative with another. It makes the evidence behind narratives inspectable.</blockquote>
+ </div>
+</section>
+
+<section class="section" id="research">
+ <div class="wrap">
+  <div class="section-head"><div><div class="kicker">11 / Research program</div><h2>From philosophy<br>to testable inquiry.</h2></div><div><p class="section-intro">The framework becomes research when its terms are defined, its claims are operationalized, and its propositions are allowed to be challenged by evidence.</p></div></div>
+  <div class="grid two">
+   <article class="card"><div class="num">RQ 01</div><h3>What does compression preserve?</h3><p>Compare source material with summaries, records, and later reconstructions. Measure loss of context, accuracy, and retrievability.</p></article>
+   <article class="card"><div class="num">RQ 02</div><h3>Does AI increase interpretive diversity?</h3><p>Compare human-only and AI-assisted analysis. Evaluate genuinely distinct hypotheses, source diversity, and hidden shared assumptions.</p></article>
+   <article class="card"><div class="num">RQ 03</div><h3>Does decompression improve truth-seeking?</h3><p>Test whether generated alternatives improve explanations or mainly increase unsupported claims. Audit citations and reproducibility.</p></article>
+   <article class="card"><div class="num">RQ 04</div><h3>How do interpretations become authoritative?</h3><p>Trace how findings, narratives, and rules become embedded in institutions, curricula, policies, and public discourse.</p></article>
+   <article class="card"><div class="num">RQ 05</div><h3>Does AI distribute or concentrate power?</h3><p>Study ownership, language coverage, access, platform dependence, and the ability to challenge outputs.</p></article>
+   <article class="card"><div class="num">RQ 06</div><h3>Can institutions remain revisable?</h3><p>Compare systems that preserve stability while enabling appeal, correction, dissent, and lawful change.</p></article>
+  </div>
+  <h3 style="margin-top:36px">Evaluation dashboard</h3>
+  <div style="overflow-x:auto"><table class="compare"><thead><tr><th>Dimension</th><th>Core question</th><th>Possible indicator</th></tr></thead><tbody>
+   <tr><td>Compression quality</td><td>What essential information survives?</td><td>Fidelity and retained context</td></tr>
+   <tr><td>Decompression breadth</td><td>How many meaningful alternatives emerge?</td><td>Distinct hypotheses and source diversity</td></tr>
+   <tr><td>Evidential quality</td><td>Are alternatives supported?</td><td>Accuracy, corroboration, reproducibility</td></tr>
+   <tr><td>Inclusiveness</td><td>Whose experiences are represented?</td><td>Coverage across languages and communities</td></tr>
+   <tr><td>Fixation</td><td>Which interpretations become authoritative?</td><td>Adoption in policies, standards, curricula</td></tr>
+   <tr><td>Revisability</td><td>Can conclusions be corrected?</td><td>Appeals, corrections, version histories</td></tr>
+   <tr><td>Power distribution</td><td>Who controls the process?</td><td>Ownership, access, governance, accountability</td></tr>
+  </tbody></table></div>
+  <p class="small" style="margin-top:12px">Indicators must be tailored to the case. More hypotheses do not necessarily mean greater diversity; more corrections may indicate a healthy correction system rather than poor quality.</p>
+ </div>
+</section>
+
+<section class="section" id="synthesis">
+ <div class="wrap">
+  <div class="section-head"><div><div class="kicker">12 / Synthesis</div><h2>Eight propositions.<br>One open question.</h2></div><div><p class="section-intro">The framework links cumulative culture, symbolic representation, AI-assisted generation, institutional power, and the ethics of revision.</p></div></div>
+  <div class="grid two">
+   <article class="card"><div class="num">01</div><h3>Civilization is cumulative</h3><p>Representations allow experience to be preserved, transmitted, and reused across generations.</p></article>
+   <article class="card"><div class="num">02</div><h3>Compression is incomplete</h3><p>Every representation selects, abstracts, and omits; no model should be confused with the whole it represents.</p></article>
+   <article class="card"><div class="num">03</div><h3>Decompression expands possibilities</h3><p>Interpretation and recombination can expose new explanations, connections, and futures.</p></article>
+   <article class="card"><div class="num">04</div><h3>AI changes the scale</h3><p>AI can transform large bodies of symbolic material, but remains limited by data, resources, and evaluation.</p></article>
+   <article class="card"><div class="num">05</div><h3>Possibility needs validation</h3><p>Generation alone does not establish truth, feasibility, or ethical legitimacy.</p></article>
+   <article class="card"><div class="num">06</div><h3>Fixation can close inquiry</h3><p>Stable institutions are necessary, but dangerous when they become immune to challenge.</p></article>
+   <article class="card"><div class="num">07</div><h3>Symbolic power has material effects</h3><p>Control over archives, models, and institutions shapes which experiences and interpretations influence action.</p></article>
+   <article class="card"><div class="num">08</div><h3>Correction must be institutionalized</h3><p>A mature civilization preserves knowledge while maintaining meaningful procedures for revision.</p></article>
+  </div>
+  <div class="card" style="margin-top:22px;padding:clamp(25px,5vw,54px);background:linear-gradient(135deg,rgba(141,225,208,.1),rgba(138,184,255,.04),rgba(230,154,178,.08))">
+   <div class="eyebrow">The central research question</div>
+   <h2 style="font-size:clamp(2rem,4vw,3.5rem);max-width:950px">Will AI expand humanity's ability to question its symbolic worlds—or help powerful institutions make one symbolic world harder to question?</h2>
+   <p class="section-intro">The future depends not only on what AI can generate, but on who controls generation, evaluation, selection, and institutionalization—and on the evidence, ethics, and accountability that govern each stage.</p>
+  </div>
+ </div>
+</section>
+
+<section class="section" id="manifesto">
+ <div class="wrap">
+  <div class="section-head"><div><div class="kicker">13 / Manifesto</div><h2>Beyond the<br>fixed world.</h2></div><div><p class="section-intro">An open symbolic civilization is not a civilization without standards. It is one whose standards remain answerable to evidence, purpose, and the people affected by them.</p></div></div>
+  <div class="card" style="padding:clamp(24px,5vw,55px)">
+   <p style="font-size:clamp(1.12rem,2.1vw,1.55rem);line-height:1.8;color:var(--ink)">Human beings inherit a world they did not create, but they do not encounter it without interpretation. Through experience, memory, imagination, language, and collective action, they build symbolic systems that allow civilization to accumulate knowledge across generations.</p>
+   <p style="font-size:1.08rem;color:#bdc9d2">These systems preserve reality while transforming it. They make the world understandable, but they also influence what becomes visible, memorable, legitimate, and possible.</p>
+   <p style="font-size:1.08rem;color:#bdc9d2">Artificial intelligence introduces a new capacity into this historical process. It can transform accumulated symbolic material into new combinations, explanations, representations, and scenarios. It can help examine assumptions, compare perspectives, recover overlooked relationships, and explore futures that would otherwise remain difficult to formulate.</p>
+   <p style="font-size:1.08rem;color:#bdc9d2">Yet the expansion of possibility does not guarantee truth or freedom. Every system that generates possibilities also participates in selection. Evidence, institutions, incentives, and power determine which possibilities survive, which are rejected, and which become the architecture of collective life.</p>
+   <p style="font-size:1.08rem;color:#bdc9d2">The opportunity is to build a civilization that accumulates knowledge without mistaking its archives for completeness, uses AI without surrendering judgment, preserves institutions without making them immutable, and creates shared realities without eliminating the right to question them.</p>
+   <h3 style="font-size:clamp(1.5rem,3vw,2.5rem);line-height:1.35;margin-top:28px;color:var(--accent)">The purpose of AI should not be to finalize reality on humanity's behalf. It should be to expand humanity's capacity to understand, test, and responsibly transform the world.</h3>
+   <div class="hero-actions"><button class="btn primary" id="copyManifesto">Copy manifesto ↗</button><button class="btn" onclick="window.print()">Print / Save as PDF ↗</button></div>
+   <p class="small" id="copyStatus" aria-live="polite"></p>
+  </div>
+ </div>
+</section>
+</main>
+<footer><div class="wrap footer-grid"><div><div class="brand"><span class="brand-mark">S/∞</span><span>THE SYMBOLIC CIVILIZATION</span></div><p class="small" style="max-width:560px;margin-top:13px">A philosophical research framework. Its historical sequence and central model are interpretive tools, not a claim that civilization follows one universal or inevitable path.</p></div><div><p class="small">Compression · Decompression · Fixation · Revision</p><p class="small">Single-file edition · Runs locally · No external libraries or network calls</p><a class="small" href="#top">Back to the beginning ↑</a></div></div></footer>
+<button class="backtop" id="backtop" aria-label="Back to top">↑</button>
+<script>
+const $ = (s,root=document)=>root.querySelector(s);
+const $$ = (s,root=document)=>Array.from(root.querySelectorAll(s));
+const navlinks=$('#navlinks');
+$('#menuToggle').addEventListener('click',()=>navlinks.classList.toggle('open'));
+$$('#navlinks a').forEach(a=>a.addEventListener('click',()=>navlinks.classList.remove('open')));
+$('#themeToggle').addEventListener('click',()=>document.body.classList.toggle('light'));
+const progress=$('#progress'),backtop=$('#backtop');
+window.addEventListener('scroll',()=>{
+ const max=document.documentElement.scrollHeight-innerHeight;
+ progress.style.width=(max>0?scrollY/max*100:0)+'%';
+ backtop.classList.toggle('show',scrollY>500);
+},{passive:true});
+backtop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+$('#startLab').addEventListener('click',()=>$('#possibilities').scrollIntoView({behavior:'smooth'}));
+
+const templates={
+ history:[
+  ['Evidence question','Which primary sources, eyewitness accounts, or material records support this statement?'],
+  ['Competing interpretation','How might different groups who experienced the event describe it differently, and what evidence supports each account?'],
+  ['Causal hypothesis','What conditions may have contributed to the event, and what evidence would distinguish causes from correlations?'],
+  ['Missing voices','Whose experience is absent from the surviving record, and what can—not can—be responsibly inferred?'],
+  ['Validation test','What independent evidence could confirm, qualify, or falsify the leading explanations?']],
+ environment:[
+  ['Physical mechanism','Which ecological or physical processes are involved, and what measurements would help establish their contribution?'],
+  ['Distribution of risk','Who is most exposed, who has the resources to adapt, and how do institutions distribute the costs?'],
+  ['Historical comparison','What do maps, satellite data, local records, and oral histories show across different time periods?'],
+  ['Alternative intervention','What interventions could reduce harm, and what trade-offs or unintended consequences might follow?'],
+  ['Validation test','What baseline, time series, and independent indicators would show whether conditions improved?']],
+ politics:[
+  ['Institutional design','Which formal rules and informal practices turn the claim into a working political arrangement?'],
+  ['Power analysis','Who gains authority, resources, or legitimacy from this interpretation, and who bears the costs?'],
+  ['Competing account','How would supporters, critics, and affected communities frame the same issue differently?'],
+  ['Counterfactual','What might change if one institutional rule or incentive were different?'],
+  ['Validation test','Which records, outcomes, and independent sources could test the competing explanations?']],
+ technology:[
+  ['Capability boundary','What can the system actually do, under which conditions, and where does performance fail?'],
+  ['Data and assumptions','Which training data, objective functions, and design decisions shape the output?'],
+  ['Alternative design','What different architectures, governance models, or workflows might address the same need?'],
+  ['Social consequence','Who benefits, who bears risks, and what dependencies or power concentrations could emerge?'],
+  ['Validation test','What benchmarks, real-world trials, audits, and failure analyses are needed?']],
+ film:[
+  ['Point of view','Whose experience frames the story, and whose perspective is missing or difficult to access?'],
+  ['Evidence and image','What does the camera actually record, what is staged or reconstructed, and how is context preserved?'],
+  ['Alternative structure','How might chronology, juxtaposition, sound, silence, or multiple voices change interpretation?'],
+  ['Ethical consequence','Could filming or publication expose a participant to harm, misrepresentation, or loss of agency?'],
+  ['Validation test','What source checks, participant review, contextual material, or editorial disclosures are needed?']]
+};
+function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+$('#decompress').addEventListener('click',()=>{
+ const claim=$('#claim').value.trim();
+ if(!claim){$('#claim').focus();return}
+ const domain=$('#domain').value,items=templates[domain];
+ const names={history:'Historical inquiry',environment:'Environmental inquiry',politics:'Political inquiry',technology:'AI and technology inquiry',film:'Documentary inquiry'};
+ $('#labOutput').innerHTML='<div class="num">POSSIBILITY OUTPUT · '+names[domain].toUpperCase()+'</div><h3>One claim, five lines of inquiry</h3><p><b>Compressed statement:</b> “'+escapeHTML(claim)+'”</p><ol>'+items.map(([t,d])=>'<li><b>'+t+':</b> '+d+'</li>').join('')+'</ol><div class="result-note">These are prompts for investigation, not findings. The next step is to gather evidence, compare alternatives, record uncertainty, and revise the claim if needed.</div>';
+});
+const levels=[
+ ['Conceivable','A possibility can be expressed in language, images, or a conceptual model. Conceivability alone does not establish consistency, feasibility, or truth.'],
+ ['Coherent','The possibility is internally consistent enough to analyze. Identify assumptions, contradictions, dependencies, and what would need to be true for it to work.'],
+ ['Feasible','Available evidence suggests it could work under identifiable physical, technical, economic, social, and ethical conditions. Estimate costs and constraints.'],
+ ['Tested and evaluated','The proposal is implemented, simulated, or tested against appropriate criteria. Compare actual outcomes with expectations and document unintended effects.']
+];
+$$('#possibilityScale button').forEach(b=>b.addEventListener('click',()=>{
+ $$('#possibilityScale button').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+ const [title,desc]=levels[Number(b.dataset.level)];
+ $('#levelDetail').innerHTML='<h3>'+title+'</h3><p class="muted">'+desc+'</p>';
+}));
+const manifestoText=`Beyond the Fixed World\n\nHuman beings inherit a world they did not create, but they do not encounter it without interpretation. Through experience, memory, imagination, language, and collective action, they build symbolic systems that allow civilization to accumulate knowledge across generations.\n\nThese systems preserve reality while transforming it. They make the world understandable, but they also influence what becomes visible, memorable, legitimate, and possible.\n\nArtificial intelligence introduces a new capacity into this historical process. It can transform accumulated symbolic material into new combinations, explanations, representations, and scenarios. It can help examine assumptions, compare perspectives, recover overlooked relationships, and explore futures that would otherwise remain difficult to formulate.\n\nYet the expansion of possibility does not guarantee truth or freedom. Every system that generates possibilities also participates in selection. Evidence, institutions, incentives, and power determine which possibilities survive, which are rejected, and which become the architecture of collective life.\n\nThe opportunity is to build a civilization that accumulates knowledge without mistaking its archives for completeness, uses AI without surrendering judgment, preserves institutions without making them immutable, and creates shared realities without eliminating the right to question them.\n\nThe purpose of AI should not be to finalize reality on humanity's behalf. It should be to expand humanity's capacity to understand, test, and responsibly transform the world.`;
+$('#copyManifesto').addEventListener('click',async()=>{
+ const status=$('#copyStatus');
+ try{await navigator.clipboard.writeText(manifestoText);status.textContent='Manifesto copied to clipboard.'}
+ catch(e){const ta=document.createElement('textarea');ta.value=manifestoText;document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch(_){}ta.remove();status.textContent=ok?'Manifesto copied to clipboard.':'Clipboard access was blocked. Select and copy the manifesto text manually.'}
+});
+</script>
+</body>
+</html>
